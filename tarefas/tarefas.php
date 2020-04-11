@@ -1,6 +1,7 @@
 <?php
     session_start();
-
+    
+    require "config.php";
     require "database.php";
     require "tarefas_helper.php";
 
@@ -55,6 +56,11 @@
 
         if (!$tem_erros){
             gravar_tarefa($conn, $tarefa);
+
+            if (array_key_exists('lembrete',$_POST) && $_POST["lembrete"] == 1){
+                enviar_email($tarefa);
+            }
+
             header('Location: tarefas.php');
             die();
         }

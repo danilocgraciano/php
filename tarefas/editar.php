@@ -1,6 +1,7 @@
 <?php
     session_start();
 
+    require "config.php";
     require "database.php";
     require "tarefas_helper.php";
 
@@ -48,6 +49,12 @@
 
         if (!$tem_erros){
             editar_tarefa($conn, $tarefa);
+
+            if (array_key_exists('lembrete',$_POST) && $_POST["lembrete"] == 1){
+                $anexos = buscar_anexos($conn, $tarefa["id"]);
+                enviar_email($tarefa, $anexos);
+            }
+
             header('Location: tarefas.php');
             die();
         }

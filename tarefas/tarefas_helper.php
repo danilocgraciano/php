@@ -86,3 +86,44 @@
         return true;
 
     }
+
+    function enviar_email($tarefa, $anexos = []){
+        
+        require "bibliotecas/PHPMailer/PHPMailerAutoload.php";
+
+        $mail = new PHPMailer(); 
+        $mail->isSMTP();
+        $mail->Host = "mail.cck.com.br";
+        $mail->Port = 465;
+        $mail->SMTPSecure = "ssl";
+        $mail->SMTPAuth = true;
+        
+        $mail->Username = "danilo@cck.com.br";
+        $mail->Password = "";
+
+        $mail->setFrom("danilo@cck.com.br","Avisador de Tarefas");
+
+        $mail->addAddress(EMAIL_NOTIFICACAO);
+        $mail->Subject = "Aviso de tarefa: {$tarefa['nome']}";
+
+        $corpo = preparar_corpo_email($tarefa, $anexos);
+        $mail->msgHTML($corpo);
+
+        foreach ($anexos as $anexo) {
+            $mail->addAttachment("anexos/{$anexo['arquivo']}");
+        }
+
+        if (!$mail->send()){
+            error_log("Error " . $mail->ErrorInfo);
+        }
+    }
+
+    function preparar_corpo_email($tarefa, $anexos){
+        
+        ob_start();
+        include "template.php";
+        $corpo = ob_get_contents();
+        ob_end_clean();
+
+        return $corpo;
+    }

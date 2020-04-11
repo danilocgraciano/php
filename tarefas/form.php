@@ -80,6 +80,15 @@
     </div>
 
     <div class="form-group row">
+        <div class="col-sm-2">Lembrete por e-mail:</div>
+        <div class="col-sm-10">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="lembrete" name="lembrete" value="1"/>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group row">
         <div class="col-sm-10">
         <button type="submit" class="btn btn-primary"><?php echo ($tarefa['id'] > 0) ? 'Editar' : 'Salvar'; ?></button>
     </div>
