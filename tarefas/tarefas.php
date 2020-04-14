@@ -4,39 +4,37 @@
     require "config.php";
     require "database.php";
     require "tarefas_helper.php";
+    require "classes/Tarefa.php";
+    require "classes/RepositorioTarefas.php";
+
+    $repositorio_tarefas = new RepositorioTarefas($conn);
 
     $exibir_tabela = true;
 
     $tem_erros = false;
     $errors = [];
 
-    $tarefa = [
-        'id' => 0,
-        'nome' => (array_key_exists('nome', $_POST)) ? $_POST['nome'] : '',
-        'descricao' => (array_key_exists('descricao', $_POST)) ? $_POST['descricao'] : '',
-        'prazo' => (array_key_exists('prazo', $_POST)) ? traduz_data_para_banco($_POST['prazo']) : '',
-        'prioridade' => (array_key_exists('prioridade', $_POST)) ? $_POST['prioridade'] : 1,
-        'concluida' => (array_key_exists('concluida', $_POST)) ? $_POST['concluida'] : ''
-    ];
-    
+    $tarefa = new Tarefa();
+    $tarefa->setPrioridade(1);
+
     if (tem_post()) {
 
         if (array_key_exists('nome', $_POST) && strlen($_POST['nome']) > 0) {
-            $tarefa['nome'] = $_POST['nome'];
+            $tarefa->setNome($_POST['nome']);
         } else {
             $tem_erros = true;
             $errors['nome'] = 'nome inválido';
         }
 
         if (array_key_exists('descricao', $_POST)) {
-            $tarefa['descricao'] = $_POST['descricao'];
+            $tarefa->setDescricao($_POST['descricao']);
         } else {
-            $tarefa['descricao'] = '';
+            $tarefa->setDescricao('');
         }
 
         if (array_key_exists('prazo', $_POST) && strlen($_POST['prazo']) > 0) {
             if (validar_data($_POST['prazo'])){
-                $tarefa['prazo'] = traduz_data_para_banco($_POST['prazo']);
+                $tarefa->setPrazo(traduz_data_para_banco($_POST['prazo']));
             } else {
                 $tem_erros = true;
                 $errors['prazo'] = 'prazo inválido';
@@ -46,16 +44,16 @@
             $errors['prazo'] = 'prazo inválido';
         }
 
-        $tarefa['prioridade'] = $_POST['prioridade'];
+        $tarefa->setPrioridade($_POST['prioridade']);
 
         if (array_key_exists('concluida' ,$_POST)) {
-            $tarefa['concluida'] = 1;
+            $tarefa->setConcluida(true);
         } else {
-            $tarefa['concluida'] = 0;
+            $tarefa->setConcluida(false);
         }
 
         if (!$tem_erros){
-            gravar_tarefa($conn, $tarefa);
+            $repositorio_tarefas->salvar($tarefa);
 
             if (array_key_exists('lembrete',$_POST) && $_POST["lembrete"] == 1){
                 enviar_email($tarefa);
@@ -66,6 +64,6 @@
         }
     }
 
-    $lista_tarefas = buscar_tarefas($conn);
+    $tarefas = $repositorio_tarefas->buscar();
 
     require "template.php";

@@ -36,6 +36,22 @@
 
     }
 
+    function traduz_data_br_para_objeto($data) {
+
+        if ($data == ''){
+            return "";
+        }
+
+        $dados = explode("/", $data);
+
+        if (count($dados) != 3){
+            return $data;
+        }
+
+        return DateTime::createFromFormat('d/m/Y', $data);
+
+    }
+
     function traduz_data_para_exibir($data){
         if ($data == "" or $data == "0000-00-00"){
             return "";
@@ -51,6 +67,7 @@
 
         return $formatter->format('d/m/Y');
     }
+
 
     function validar_data($data){
         
@@ -87,7 +104,7 @@
 
     }
 
-    function enviar_email($tarefa, $anexos = []){
+    function enviar_email(Tarefa $tarefa){
         
         require "bibliotecas/PHPMailer/PHPMailerAutoload.php";
 
@@ -104,13 +121,13 @@
         $mail->setFrom("danilo@cck.com.br","Avisador de Tarefas");
 
         $mail->addAddress(EMAIL_NOTIFICACAO);
-        $mail->Subject = "Aviso de tarefa: {$tarefa['nome']}";
+        $mail->Subject = "Aviso de tarefa: {$tarefa->getNome()}";
 
-        $corpo = preparar_corpo_email($tarefa, $anexos);
+        $corpo = preparar_corpo_email($tarefa);
         $mail->msgHTML($corpo);
 
-        foreach ($anexos as $anexo) {
-            $mail->addAttachment("anexos/{$anexo['arquivo']}");
+        foreach ($tarefa->getAnexos() as $anexo) {
+            $mail->addAttachment("anexos/{$anexo->getArquivo()}");
         }
 
         if (!$mail->send()){
@@ -118,7 +135,7 @@
         }
     }
 
-    function preparar_corpo_email($tarefa, $anexos){
+    function preparar_corpo_email($tarefa){
         
         ob_start();
         include "template.php";

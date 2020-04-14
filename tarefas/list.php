@@ -10,20 +10,20 @@
         </tr>
     </thead>
 
-    <?php foreach ($lista_tarefas as $task) : ?>
+    <?php foreach ($tarefas as $task) : ?>
         <tr>
             <td>
-                <a href="tarefa.php?id=<?php echo $task['id']; ?>">
-                    <?php echo $task['nome']; ?>
+                <a href="tarefa.php?id=<?php echo $task->getId(); ?>">
+                    <?php echo $task->getNome(); ?>
                 </a>
             </td>
-            <td><?php echo $task['descricao']; ?></td>
-            <td><?php echo traduz_data_para_exibir($task['prazo']); ?></td>
-            <td><?php echo traduzir_prioridade($task['prioridade']); ?></td>
-            <td><?php echo traduzir_concluida($task['concluida']); ?></td>
+            <td><?php echo $task->getDescricao(); ?></td>
+            <td><?php echo traduz_data_para_exibir($task->getPrazo()); ?></td>
+            <td><?php echo traduzir_prioridade($task->getPrioridade()); ?></td>
+            <td><?php echo traduzir_concluida($task->getConcluida()); ?></td>
             <td>
-                <a href="editar.php?id=<?php echo $task['id']; ?>">Editar</a>
-                <a href="remover.php?id=<?php echo $task['id']; ?>">Excluir</a>
+                <a href="editar.php?id=<?php echo $task->getId(); ?>">Editar</a>
+                <a href="remover.php?id=<?php echo $task->getId(); ?>">Excluir</a>
             </td>
         </tr>
     <?php endforeach?>

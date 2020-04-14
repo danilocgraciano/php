@@ -2,12 +2,12 @@
 
 class Tarefa
 {
-    private $id;
-    private $nome;
-    private $descricao;
-    private $prazo;
-    private $prioridade;
-    private $concluida;
+    private $id = 0;
+    private $nome = "";
+    private $descricao = "";
+    private $prazo = "";
+    private $prioridade = 1;
+    private $concluida = false;
     private $anexos = [];
 
 
@@ -41,12 +41,12 @@ class Tarefa
         return $this->descricao;
     }
 
-    public function setPrazo(string $prazo)
+    public function setPrazo($prazo)
     {
         $this->prazo = $prazo;
     }
 
-    public function getPrazo(): string
+    public function getPrazo()
     {
         return $this->prazo;
     }
