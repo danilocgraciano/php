@@ -3,10 +3,12 @@
 class RepositorioTarefas
 {
     private $conexao;
+    private $repositorio_anexos;
 
-    public function __construct($conexao)
+    public function __construct($conexao, $repositorio_anexos)
     {
         $this->conexao = $conexao;
+        $this->repositorio_anexos = $repositorio_anexos;
     }
 
     public function salvar(Tarefa $tarefa)
@@ -94,6 +96,8 @@ class RepositorioTarefas
 
 
         while($tarefa = $resultado->fetch_object('Tarefa')) {
+            $anexos = $this->repositorio_anexos->buscar_anexos($tarefa->getId()) ?? [];
+            $tarefa->setAnexos($anexos);
             $tarefas[] = $tarefa;
         }
 
@@ -113,6 +117,8 @@ class RepositorioTarefas
         }
 
         $tarefa = $resultado->fetch_object('Tarefa');
+        $anexos = $this->repositorio_anexos->buscar_anexos($tarefa->getId()) ?? [];
+        $tarefa->setAnexos($anexos);
 
         return $tarefa;
     }

@@ -41,12 +41,12 @@ class Tarefa
         return $this->descricao;
     }
 
-    public function setPrazo($prazo)
+    public function setPrazo(string $prazo)
     {
         $this->prazo = $prazo;
     }
 
-    public function getPrazo()
+    public function getPrazo() : string
     {
         return $this->prazo;
     }

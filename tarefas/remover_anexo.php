@@ -2,9 +2,15 @@
 
     require "config.php";
     require "database.php";
+    require "classes/Tarefa.php";
+    require "classes/Anexo.php";
+    require "classes/RepositorioAnexos.php";
+    require "classes/RepositorioTarefas.php";
 
-    $anexo = buscar_anexo($conn, $_GET["id"]);
-    remover_anexo($conn, $anexo["id"]);
-    unlink('anexos/' . $anexo["arquivo"]);
+    $repositorio_anexos = new RepositorioAnexos($conn);
 
-    header('Location: tarefa.php?id=' . $anexo["tarefa_id"]);
+    $anexo = $repositorio_anexos->buscar_anexo($_GET["id"]);
+    $repositorio_anexos->remover_anexo($anexo->getId());
+    unlink('anexos/' . $anexo->getArquivo());
+
+    header('Location: tarefa.php?id=' . $anexo->getTarefaId());

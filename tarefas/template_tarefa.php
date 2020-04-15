@@ -9,7 +9,7 @@
     <body>
         <div class="container mt-3">
         
-            <h1>Tarefa: <?php echo $tarefa['nome']; ?></h1>
+            <h1>Tarefa: <?php echo $tarefa->getNome(); ?></h1>
 
             <p>
                 <a href="tarefas.php">
@@ -18,24 +18,24 @@
             </p>
             <p>
                 <strong>Concluída:</strong>
-                <?php echo traduzir_concluida($tarefa['concluida']); ?>
+                <?php echo traduzir_concluida($tarefa->getConcluida()); ?>
             </p>
             <p>
                 <strong>Descrição:</strong>
-                <?php echo nl2br($tarefa['descricao']); ?>
+                <?php echo nl2br($tarefa->getDescricao()); ?>
             </p>
             <p>
                 <strong>Prazo:</strong>
-                <?php echo traduz_data_para_exibir($tarefa['prazo']); ?>
+                <?php echo traduz_data_para_exibir($tarefa->getPrazo()); ?>
             </p>
             <p>
                 <strong>Prioridade:</strong>
-                <?php echo traduzir_prioridade($tarefa['prioridade']); ?>
+                <?php echo traduzir_prioridade($tarefa->getPrioridade()); ?>
             </p>
 
             <h2>Anexos</h2>
 
-            <?php if (count($anexos) > 0) : ?>
+            <?php if (count($tarefa->getAnexos()) > 0) : ?>
                 <table class="table table-sm table-bordered">
                     <thead>
                         <tr>
@@ -44,12 +44,12 @@
                         </tr>
                     </thead>
 
-                    <?php foreach ($anexos as $anexo) : ?>
+                    <?php foreach ($tarefa->getAnexos() as $anexo) : ?>
                         <tr>
-                            <td><?php echo $anexo['nome']; ?></td>
+                            <td><?php echo $anexo->getNome(); ?></td>
                             <td>
-                                <a href="anexos/<?php echo $anexo['arquivo']; ?>">Download</a>
-                                <a href="remover_anexo.php?id=<?php echo $anexo['id']; ?>">Remover</a>
+                                <a href="anexos/<?php echo $anexo->getArquivo(); ?>">Download</a>
+                                <a href="remover_anexo.php?id=<?php echo $anexo->getId(); ?>">Remover</a>
                             </td>
                         </tr>
                     <?php endforeach?>
@@ -63,7 +63,7 @@
                 <fieldset>
                     <legend>Novo anexo</legend>
 
-                    <input type="hidden" name="tarefa_id" value="<?php echo $tarefa['id']?>"/>
+                    <input type="hidden" name="tarefa_id" value="<?php echo $tarefa->getId(); ?>"/>
 
                     <label>
                         <?php if ( $tem_erros & array_key_exists('anexo',$erros_validacao)) : ?>
