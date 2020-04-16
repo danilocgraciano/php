@@ -5,7 +5,7 @@
     <div class="form-group row">
         <label for="nome" class="col-sm-2 col-form-label">Nome</label>
         <div class="col-sm-10">
-            <input type="text" class="form-control form-control-sm" id="nome" name="nome" value="<?php echo $tarefa->getNome(); ?>">
+            <input type="text" class="form-control form-control-sm" id="nome" name="nome" value="<?php echo htmlEntities($tarefa->getNome()); ?>">
             <?php if ($tem_erros && array_key_exists('nome', $errors)) : ?>
                 <small id="nomeHelp" class="form-text text-muted">
                     <?php echo $errors['nome'];?>
@@ -17,7 +17,7 @@
     <div class="form-group row">
         <label for="descricao" class="col-sm-2 col-form-label">Descrição</label>
         <div class="col-sm-10">
-        <textarea class="form-control fomr-control-sm" id="descricao" name="descricao" rows="3"><?php echo $tarefa->getDescricao(); ?></textarea>
+        <textarea class="form-control fomr-control-sm" id="descricao" name="descricao" rows="3"><?php echo htmlEntities($tarefa->getDescricao()); ?></textarea>
         </div>
     </div>
 

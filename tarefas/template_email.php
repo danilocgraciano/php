@@ -1,4 +1,4 @@
-<h1>Tarefa: <?php echo $tarefa->getNome(); ?></h1>
+<h1>Tarefa: <?php echo htmlentities($tarefa->getNome()); ?></h1>
 
 <p>
     <strong>Concluída:</strong>
@@ -6,7 +6,7 @@
 </p>
 <p>
     <strong>Descrição:</strong>
-    <?php echo nl2br($tarefa->getDescricao()); ?>
+    <?php echo nl2br(htmlentities($tarefa->getDescricao())); ?>
 </p>
 <p>
     <strong>Prazo:</strong>

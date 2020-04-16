@@ -13,8 +13,8 @@ class RepositorioTarefas
 
     public function salvar(Tarefa $tarefa)
     {
-        $nome = $tarefa->getNome();
-        $descricao = $tarefa->getDescricao();
+        $nome = strip_tags($this->conexao->escape_string($tarefa->getNome()));
+        $descricao = strip_tags($this->conexao->escape_string($tarefa->getDescricao()));
         $prioridade = $tarefa->getPrioridade();
         $prazo = $tarefa->getPrazo();
         $concluida = ($tarefa->getConcluida()) ? 1 : 0;
@@ -46,8 +46,8 @@ class RepositorioTarefas
     public function atualizar(Tarefa $tarefa)
     {
         $id = $tarefa->getId();
-        $nome = $tarefa->getNome();
-        $descricao = $tarefa->getDescricao();
+        $nome = strip_tags($this->conexao->escape_string($tarefa->getNome()));
+        $descricao = strip_tags($this->conexao->escape_string($tarefa->getDescricao()));
         $prioridade = $tarefa->getPrioridade();
         $prazo = $tarefa->getPrazo();
         $concluida = ($tarefa->getConcluida()) ? 1 : 0;
@@ -106,6 +106,7 @@ class RepositorioTarefas
 
     private function buscar_tarefa($tarefa_id)
     {
+        $tarefa_id = strip_tags($this->conexao->escape_string($tarefa_id));
         $query = "SELECT * FROM tarefas where id = {$tarefa_id}";
         $resultado = $this->conexao->query($query);
 
@@ -125,6 +126,7 @@ class RepositorioTarefas
 
     function remover($tarefa_id)
     {
+        $tarefa_id = strip_tags($this->conexao->escape_string($tarefa_id));
         $query = "DELETE FROM tarefas where id = {$tarefa_id}";
         $res = $this->conexao->query($query);
 
