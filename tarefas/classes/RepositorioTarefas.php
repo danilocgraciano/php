@@ -2,23 +2,19 @@
 
 class RepositorioTarefas
 {
-    private $conexao;
+    private $pdo;
     private $repositorio_anexos;
 
-    public function __construct($conexao, $repositorio_anexos)
+    public function __construct(PDO $pdo, $repositorio_anexos)
     {
-        $this->conexao = $conexao;
+        $this->pdo = $pdo;
         $this->repositorio_anexos = $repositorio_anexos;
     }
 
     public function salvar(Tarefa $tarefa)
     {
-        $nome = strip_tags($this->conexao->escape_string($tarefa->getNome()));
-        $descricao = strip_tags($this->conexao->escape_string($tarefa->getDescricao()));
-        $prioridade = $tarefa->getPrioridade();
         $prazo = $tarefa->getPrazo();
-        $concluida = ($tarefa->getConcluida()) ? 1 : 0;
-
+        
         if (is_object($prazo)) {
             $prazo = $prazo->format('Y-m-d');
         }
@@ -27,30 +23,26 @@ class RepositorioTarefas
             INSERT INTO tarefas 
             (nome, descricao, prioridade, prazo, concluida)
             VALUES
-            (
-                '{$nome}',
-                '{$descricao}',
-                {$prioridade},
-                '{$prazo}',
-                {$concluida}
-            )
+            (:nome, :descricao, :prioridade, :prazo, :concluida)
         ";
 
-        $res = $this->conexao->query($query);
+        $stmt = $this->pdo->prepare($query);
+        $res = $stmt->execute([
+            "nome" => strip_tags($tarefa->getNome()),
+            "descricao" => strip_tags($tarefa->getDescricao()),
+            "prioridade" => $tarefa->getPrioridade(),
+            "prazo" => $prazo,
+            "concluida" => ($tarefa->getConcluida()) ? 1 : 0
+        ]);
 
         if (!$res){
-            error_log("Error " . mysqli_error($this->conexao));
+            error_log(print_r($stmt->errorInfo(),true));
         }
     }
 
     public function atualizar(Tarefa $tarefa)
     {
-        $id = $tarefa->getId();
-        $nome = strip_tags($this->conexao->escape_string($tarefa->getNome()));
-        $descricao = strip_tags($this->conexao->escape_string($tarefa->getDescricao()));
-        $prioridade = $tarefa->getPrioridade();
         $prazo = $tarefa->getPrazo();
-        $concluida = ($tarefa->getConcluida()) ? 1 : 0;
 
         if (is_object($prazo)) {
             $prazo = $prazo->format('Y-m-d');
@@ -58,18 +50,27 @@ class RepositorioTarefas
 
         $query = "
             UPDATE tarefas SET
-                nome = '{$nome}',
-                descricao = '{$descricao}',
-                prioridade = {$prioridade},
-                prazo = '{$prazo}',
-                concluida = '{$concluida}'
-            WHERE id = {$id}
+                nome = :nome,
+                descricao = :descricao,
+                prioridade = :prioridade,
+                prazo = :prazo,
+                concluida = :concluida
+            WHERE id = :id
         ";
 
-        $res = $this->conexao->query($query);
+        $stmt = $this->pdo->prepare($query);
+
+        $res = $stmt->execute([
+            "nome" => strip_tags($tarefa->getNome()),
+            "descricao" => strip_tags($tarefa->getDescricao()),
+            "prioridade" => $tarefa->getPrioridade(),
+            "prazo" => $prazo,
+            "concluida" => ($tarefa->getConcluida()) ? 1 : 0,
+            "id" => $tarefa->getId(),
+        ]);
 
         if (!$res){
-            error_log("Error " . mysqli_error($this->conexao));
+            error_log(print_r($stmt->errorInfo(),true));
         }
     }
 
@@ -85,17 +86,16 @@ class RepositorioTarefas
     private function buscar_tarefas()
     {
         $query = 'SELECT * FROM tarefas';
-        $resultado = $this->conexao->query($query);
+        $resultado = $this->pdo->query($query, PDO::FETCH_CLASS, 'Tarefa');
 
         $tarefas = [];
 
         if (!$resultado){
-            error_log("Error " . mysqli_error($this->conexao));
+            error_log(print_r($this->pdo->errorInfo(),true));
             return $tarefas;
         }
 
-
-        while($tarefa = $resultado->fetch_object('Tarefa')) {
+        foreach($resultado as $tarefa){
             $anexos = $this->repositorio_anexos->buscar_anexos($tarefa->getId()) ?? [];
             $tarefa->setAnexos($anexos);
             $tarefas[] = $tarefa;
@@ -106,18 +106,20 @@ class RepositorioTarefas
 
     private function buscar_tarefa($tarefa_id)
     {
-        $tarefa_id = strip_tags($this->conexao->escape_string($tarefa_id));
-        $query = "SELECT * FROM tarefas where id = {$tarefa_id}";
-        $resultado = $this->conexao->query($query);
+        $query = "SELECT * FROM tarefas where id = :id";
+        $stmt = $this->pdo->prepare($query);
+        $res = $stmt->execute([
+            "id" => $tarefa_id
+        ]);
 
         $tarefa;
 
-        if (!$resultado){
-            error_log("Error " . mysqli_error($this->conexao));
+        if (!$res){
+            error_log(print_r($this->pdo->errorInfo(),true));
             return $tarefa;
         }
 
-        $tarefa = $resultado->fetch_object('Tarefa');
+        $tarefa = $stmt->fetchObject('Tarefa');
         $anexos = $this->repositorio_anexos->buscar_anexos($tarefa->getId()) ?? [];
         $tarefa->setAnexos($anexos);
 
@@ -126,12 +128,15 @@ class RepositorioTarefas
 
     function remover($tarefa_id)
     {
-        $tarefa_id = strip_tags($this->conexao->escape_string($tarefa_id));
-        $query = "DELETE FROM tarefas where id = {$tarefa_id}";
-        $res = $this->conexao->query($query);
+        $query = "DELETE FROM tarefas where id = :id";
+        $stmt = $this->pdo->prepare($query);
+        $res = $stmt->execute([
+            "id" => $tarefa_id
+        ]);
 
         if (!$res){
-            error_log("Error " . mysqli_error($this->conexao));
+            error_log(print_r($this->pdo->errorInfo(),true));
+            return $tarefa;
         }
     }
 }

@@ -8,8 +8,8 @@
     require "classes/RepositorioAnexos.php";
     require "classes/RepositorioTarefas.php";
 
-    $repositorio_anexos = new RepositorioAnexos($conn);
-    $repositorio_tarefas = new RepositorioTarefas($conn, $repositorio_anexos);
+    $repositorio_anexos = new RepositorioAnexos($pdo);
+    $repositorio_tarefas = new RepositorioTarefas($pdo, $repositorio_anexos);
 
     $exibir_tabela = true;
 

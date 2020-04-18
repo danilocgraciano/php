@@ -4,25 +4,28 @@ class RepositorioAnexos
 {
     private $conexao;
 
-    public function __construct($conexao)
+    public function __construct(PDO $pdo)
     {
-        $this->conexao = $conexao;
+        $this->pdo = $pdo;
     }
 
     public function buscar_anexos($tarefa_id)
     {
-        $tarefa_id = strip_tags($this->conexao->escape_string($tarefa_id));
-        $query = "SELECT * FROM anexos WHERE tarefa_id = {$tarefa_id}";
-        $resultado = $this->conexao->query($query);
+        $tarefa_id = strip_tags($tarefa_id);
+        $query = "SELECT * FROM anexos WHERE tarefa_id = :tarefa_id";
+        $stmt = $this->pdo->prepare($query);
+        $resultado = $stmt->execute([
+            "tarefa_id" => $tarefa_id
+        ]);
 
         $anexos = [];
 
         if (!$resultado){
-            error_log("Error " . mysqli_error($this->conexao));
+            error_log(print_r($stmt->errorInfo(),true));
             return $anexos;
         }
 
-        while($anexo = $resultado->fetch_object('Anexo')) {
+        while ($anexo = $stmt->fetchObject('Anexo')) {
             $anexos[] = $anexo;
         }
 
@@ -31,48 +34,54 @@ class RepositorioAnexos
 
     public function buscar_anexo($anexo_id)
     {
-        $tarefa_id = strip_tags($this->conexao->escape_string($tarefa_id));
-        $query = "SELECT * FROM anexos WHERE id = {$anexo_id}";
-        $resultado = $this->conexao->query($query);
+        $tarefa_id = strip_tags($anexo_id);
+        $query = "SELECT * FROM anexos WHERE id = :anexo_id";
+        $stmt = $this->pdo->prepare($query);
+        $res = $stmt->execute([
+            "anexo_id" => $anexo_id
+        ]);
 
         $anexo;
 
-        if (!$resultado){
-            error_log("Error " . mysqli_error($this->conexao));
+        if (!$res){
+            error_log(print_r($this->pdo->errorInfo(),true));
             return $anexo;
         }
 
-        $anexo = $resultado->fetch_object('Anexo');
+        $anexo = $stmt->fetchObject('Anexo');
         return $anexo;
     }
 
     public function salvar_anexo(Anexo $anexo)
     {
-        $anexo->setNome(strip_tags($this->conexao->escape_string($$anexo->getNome())));
-        $anexo->setArquivo(strip_tags($this->conexao->escape_string($$anexo->getArquivo())));
+        $query = "INSERT INTO anexos 
+        (tarefa_id, nome, arquivo) 
+        VALUES (:tarefa_id, :nome, :arquivo)";
 
-        $query = "INSERT INTO anexos (tarefa_id, nome, arquivo) VALUES (
-            {$anexo->getTarefaId()},
-            '{$anexo->getNome()}',
-            '{$anexo->getArquivo()}'
-        )";
-
-        $res = $this->conexao->query($query);
+        $stmt = $this->pdo->prepare($query);
+        $res = $stmt->execute([
+            "tarefa_id" => $anexo->getTarefaId(),
+            "nome" => strip_tags($anexo->getNome()),
+            "arquivo" => strip_tags($anexo->getArquivo())
+        ]);
 
         if (!$res){
-            error_log("Error " . mysqli_error($this->conexao));
+            error_log(print_r($this->pdo->errorInfo(),true));
         }
     }
 
     public function remover_anexo($id)
     {
-        $anexo_id = strip_tags($this->conexao->escape_string($id));
-        $query = "DELETE FROM anexos WHERE id = {$id}";
+        $query = "DELETE FROM anexos WHERE id = :id";
 
-        $res = $this->conexao->query();
+        $stmt = $this->pdo->prepare($query);
+        $res = $stmt->execute([
+            "id" => $id
+        ]);
 
         if (!$res){
-            error_log("Error " . mysqli_error($this->conexao));
+            error_log(print_r($this->pdo->errorInfo(),true));
+            return $tarefa;
         }
     }
 }

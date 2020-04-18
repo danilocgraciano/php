@@ -7,7 +7,7 @@
     require "classes/RepositorioAnexos.php";
     require "classes/RepositorioTarefas.php";
 
-    $repositorio_anexos = new RepositorioAnexos($conn);
+    $repositorio_anexos = new RepositorioAnexos($pdo);
 
     $anexo = $repositorio_anexos->buscar_anexo($_GET["id"]);
     $repositorio_anexos->remover_anexo($anexo->getId());
