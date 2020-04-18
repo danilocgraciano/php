@@ -70,17 +70,20 @@
 
 
     function validar_data($data){
-        
-        $pattern = '/^[0-9]{1,2}\/[0-9]{1,2}\/[0-9]{4}$/';
-        $resp = preg_match($pattern, $data);
+        $padrao = '/^[0-9]{1,2}\/[0-9]{1,2}\/[0-9]{4}$/';
+        $resultado = preg_match($padrao, $data);
 
-        if ($resp == 0){
+        if ($resultado == 0) {
             return false;
         }
 
         $dados = explode('/', $data);
-
-        return checkdate($dados[0],$dados[1],$dados[2]);
+        $dia = $dados[0];
+        $mes = $dados[1];
+        $ano = $dados[2];
+        $resultado = checkdate($mes, $dia, $ano);
+        
+        return $resultado;
     }
 
     function tem_post(){
