@@ -14,10 +14,10 @@
         <tr>
             <td>
                 <a href="tarefa.php?id=<?php echo $task->getId(); ?>">
-                    <?php echo $task->getNome(); ?>
+                    <?php echo htmlentities($task->getNome()); ?>
                 </a>
             </td>
-            <td><?php echo $task->getDescricao(); ?></td>
+            <td><?php echo htmlentities($task->getDescricao()); ?></td>
             <td><?php echo traduz_data_para_exibir($task->getPrazo()); ?></td>
             <td><?php echo traduzir_prioridade($task->getPrioridade()); ?></td>
             <td><?php echo traduzir_concluida($task->getConcluida()); ?></td>
