@@ -13,7 +13,7 @@
     <?php foreach ($tarefas as $task) : ?>
         <tr>
             <td>
-                <a href="tarefa.php?id=<?php echo $task->getId(); ?>">
+                <a href="index.php?rota=tarefa&id=<?php echo $task->getId(); ?>">
                     <?php echo htmlentities($task->getNome()); ?>
                 </a>
             </td>
@@ -22,8 +22,8 @@
             <td><?php echo traduzir_prioridade($task->getPrioridade()); ?></td>
             <td><?php echo traduzir_concluida($task->getConcluida()); ?></td>
             <td>
-                <a href="editar.php?id=<?php echo $task->getId(); ?>">Editar</a>
-                <a href="remover.php?id=<?php echo $task->getId(); ?>">Excluir</a>
+                <a href="index.php?rota=editar&id=<?php echo $task->getId(); ?>">Editar</a>
+                <a href="index.php?rota=remover&id=<?php echo $task->getId(); ?>">Excluir</a>
             </td>
         </tr>
     <?php endforeach?>

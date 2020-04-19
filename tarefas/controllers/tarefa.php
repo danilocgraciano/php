@@ -1,16 +1,5 @@
 <?php
 
-    require "config.php";
-    require "database.php";
-    require "tarefas_helper.php";
-    require "classes/Tarefa.php";
-    require "classes/Anexo.php";
-    require "classes/RepositorioAnexos.php";
-    require "classes/RepositorioTarefas.php";
-
-    $repositorio_anexos = new RepositorioAnexos($pdo);
-    $repositorio_tarefas = new RepositorioTarefas($pdo, $repositorio_anexos);
-
     $tem_erros  = false;
     $erros_validacao = [];
 
@@ -42,4 +31,4 @@
 
     $tarefa = $repositorio_tarefas->buscar($_GET['id']);
 
-    include "template_tarefa.php";
+    include __DIR__ . "/../views/template_tarefa.php";

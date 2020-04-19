@@ -102,14 +102,14 @@
             return false;
         }
 
-        move_uploaded_file($anexo["tmp_name"], "anexos/{$anexo["name"]}");
+        move_uploaded_file($anexo["tmp_name"], __DIR__ . "/../anexos/{$anexo["name"]}");
         return true;
 
     }
 
     function enviar_email(Tarefa $tarefa){
         
-        require "bibliotecas/PHPMailer/PHPMailerAutoload.php";
+        require __DIR__ . "/../libs/PHPMailer/PHPMailerAutoload.php";
 
         $mail = new PHPMailer(); 
         $mail->isSMTP();
@@ -130,7 +130,7 @@
         $mail->msgHTML($corpo);
 
         foreach ($tarefa->getAnexos() as $anexo) {
-            $mail->addAttachment("anexos/{$anexo->getArquivo()}");
+            $mail->addAttachment(__DIR__ . "/../anexos/{$anexo->getArquivo()}");
         }
 
         if (!$mail->send()){
@@ -141,7 +141,7 @@
     function preparar_corpo_email($tarefa){
         
         ob_start();
-        include "template.php";
+        include __DIR__ . "/../views/template.php";
         $corpo = ob_get_contents();
         ob_end_clean();
 

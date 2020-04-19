@@ -12,7 +12,7 @@
             <h1>Tarefa: <?php echo htmlentities($tarefa->getNome()); ?></h1>
 
             <p>
-                <a href="tarefas.php">
+                <a href="index.php?rota=tarefas">
                     Voltar para a lista de tarefas
                 </a>
             </p>
@@ -49,7 +49,7 @@
                             <td><?php echo htmlentities($anexo->getNome()); ?></td>
                             <td>
                                 <a href="anexos/<?php echo $anexo->getArquivo(); ?>">Download</a>
-                                <a href="remover_anexo.php?id=<?php echo $anexo->getId(); ?>">Remover</a>
+                                <a href="index.php?rota=remover_anexo&id=<?php echo $anexo->getId(); ?>">Remover</a>
                             </td>
                         </tr>
                     <?php endforeach?>
