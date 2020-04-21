@@ -115,15 +115,15 @@
         
         $mail = new PHPMailer(); 
         $mail->isSMTP();
-        $mail->Host = "mail.cck.com.br";
-        $mail->Port = 465;
+        $mail->Host = getenv("MAIL_HOST");
+        $mail->Port = getenv("MAIL_PORT");
         $mail->SMTPSecure = "ssl";
         $mail->SMTPAuth = true;
         
-        $mail->Username = "danilo@cck.com.br";
-        $mail->Password = getenv("MAIL_PASSWD");
+        $mail->Username = getenv("MAIL_USERNAME");
+        $mail->Password = getenv("MAIL_PASSWORD");
 
-        $mail->setFrom("danilo@cck.com.br","Avisador de Tarefas");
+        $mail->setFrom(getenv("MAIL_USERNAME"),"Avisador de Tarefas");
 
         $mail->addAddress(EMAIL_NOTIFICACAO);
         $mail->Subject = "Aviso de tarefa: {$tarefa->getNome()}";

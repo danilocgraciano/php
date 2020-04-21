@@ -2,6 +2,9 @@
 
     require "vendor/autoload.php";
 
+    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+    $dotenv->load();
+
     require "config.php";
     require "helpers/database.php";
     require "helpers/tarefas_helper.php";
