@@ -8,10 +8,6 @@
     require "config.php";
     require "helpers/database.php";
     require "helpers/tarefas_helper.php";
-    require "models/Tarefa.php";
-    require "models/Anexo.php";
-    require "models/RepositorioAnexos.php";
-    require "models/RepositorioTarefas.php";
 
     $repositorio_anexos = new RepositorioAnexos($pdo);
     $repositorio_tarefas = new RepositorioTarefas($pdo, $repositorio_anexos);

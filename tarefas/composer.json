@@ -6,6 +6,11 @@
             "email": "danilocgraciano@gmail.com"
         }
     ],
+    "autoload": {
+        "psr-4": {
+            "": "models/"
+        }
+    },
     "require": {
         "twbs/bootstrap": "^4.4",
         "components/jquery": "^3.4",
