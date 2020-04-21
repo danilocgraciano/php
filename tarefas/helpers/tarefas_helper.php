@@ -121,7 +121,7 @@
         $mail->SMTPAuth = true;
         
         $mail->Username = "danilo@cck.com.br";
-        $mail->Password = "";
+        $mail->Password = getenv("MAIL_PASSWD");
 
         $mail->setFrom("danilo@cck.com.br","Avisador de Tarefas");
 
