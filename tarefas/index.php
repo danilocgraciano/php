@@ -1,5 +1,7 @@
 <?php
 
+    require "vendor/autoload.php";
+
     require "config.php";
     require "helpers/database.php";
     require "helpers/tarefas_helper.php";

@@ -1,6 +1,10 @@
 <?php
 
+    use PHPMailer\PHPMailer\PHPMailer;
+    use PHPMailer\PHPMailer\Exception;
+
     function traduzir_prioridade($prioridade) {
+        
         switch($prioridade) {
             case 1: 
                 return "Baixa";
@@ -109,8 +113,6 @@
 
     function enviar_email(Tarefa $tarefa){
         
-        require __DIR__ . "/../libs/PHPMailer/PHPMailerAutoload.php";
-
         $mail = new PHPMailer(); 
         $mail->isSMTP();
         $mail->Host = "mail.cck.com.br";
