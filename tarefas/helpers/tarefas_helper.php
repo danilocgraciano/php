@@ -125,7 +125,7 @@
 
         $mail->setFrom(getenv("MAIL_USERNAME"),"Avisador de Tarefas");
 
-        $mail->addAddress(EMAIL_NOTIFICACAO);
+        $mail->addAddress(getenv("EMAIL_NOTIFICACAO"));
         $mail->Subject = "Aviso de tarefa: {$tarefa->getNome()}";
 
         $corpo = preparar_corpo_email($tarefa);
