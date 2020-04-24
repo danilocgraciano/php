@@ -8,6 +8,8 @@
     require "helpers/database.php";
     require "helpers/tarefas_helper.php";
 
+    $pdo = Database::getConnection();
+
     $repositorio_anexos = new RepositorioAnexos($pdo);
     $repositorio_tarefas = new RepositorioTarefas($pdo, $repositorio_anexos);
 
